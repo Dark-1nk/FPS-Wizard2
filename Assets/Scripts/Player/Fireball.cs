@@ -12,6 +12,7 @@ public class Fireball : MonoBehaviour
     public Image fireSpellVisual; // Visual of the spell
     public Image cooldownIndicator; // Cooldown progress indicator (fill or overlay)
     public WandAnimator wand;
+    public Animator wiz;
 
     public Color readyColor = Color.white; // Color when ready
     public Color cooldownColor = new(1f, 1f, 1f, 0.5f); // Color when on cooldown
@@ -68,6 +69,7 @@ public class Fireball : MonoBehaviour
         {
             sfx?.PlayOneShot("Fireball"); // Null-safe audio playback
             wand?.Fire(); // Null-safe animation trigger
+            wiz.SetTrigger("wizFire");
             Fire();
         }
     }

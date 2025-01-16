@@ -13,6 +13,7 @@ public class SparkBolt : MonoBehaviour
 
     public WandAnimator wand;
     public AudioClips sfx;
+    public Animator wiz;
     public LayerMask raycastLayerMask;
 
     private float nextTimeToFire;
@@ -39,6 +40,7 @@ public class SparkBolt : MonoBehaviour
         {
             sfx?.PlayOneShot("Spark"); // Null-safe audio playback
             wand?.Bolt(); // Null-safe animation trigger
+            wiz.SetTrigger("attack");
             Fire();
         }
     }

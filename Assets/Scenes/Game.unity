@@ -1110,7 +1110,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabToSpawn: {fileID: 3718935458964753842, guid: d7d58f7f10cf0234091b46cf7e52d6ab, type: 3}
-  spawnPoint: {fileID: 59723515}
   spawnInterval: 60
 --- !u!1 &62560922
 GameObject:
@@ -3934,8 +3933,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.9492407, y: 2, z: 5.687317}
-  m_Center: {x: -0.025379658, y: 0, z: -0.07110596}
+  m_Size: {x: 1, y: 0.7, z: 3}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &189270780
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6076,7 +6075,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabToSpawn: {fileID: 3718935458964753842, guid: d7d58f7f10cf0234091b46cf7e52d6ab, type: 3}
-  spawnPoint: {fileID: 0}
   spawnInterval: 60
 --- !u!1 &345340994
 GameObject:
@@ -6937,7 +6935,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabToSpawn: {fileID: 3718935458964753842, guid: d7d58f7f10cf0234091b46cf7e52d6ab, type: 3}
-  spawnPoint: {fileID: 424731477}
   spawnInterval: 60
 --- !u!1 &425395440
 GameObject:
@@ -7661,7 +7658,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabToSpawn: {fileID: 3718935458964753842, guid: d7d58f7f10cf0234091b46cf7e52d6ab, type: 3}
-  spawnPoint: {fileID: 0}
   spawnInterval: 60
 --- !u!1 &460216494
 GameObject:
@@ -9540,6 +9536,7 @@ GameObject:
   - component: {fileID: 558733403}
   - component: {fileID: 558733405}
   - component: {fileID: 558733404}
+  - component: {fileID: 558733406}
   m_Layer: 5
   m_Name: Wizard
   m_TagString: Untagged
@@ -9604,6 +9601,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 558733402}
   m_CullTransparentMesh: 1
+--- !u!95 &558733406
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 558733402}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e6179d5e8e75e6049abc34927ec252d6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &565527611
 GameObject:
   m_ObjectHideFlags: 0
@@ -9657,6 +9675,7 @@ MonoBehaviour:
   fireSpellVisual: {fileID: 109902016}
   cooldownIndicator: {fileID: 1697435767}
   wand: {fileID: 1741112827}
+  wiz: {fileID: 558733406}
   readyColor: {r: 1, g: 1, b: 1, a: 1}
   cooldownColor: {r: 1, g: 1, b: 1, a: 0.5}
   sfx: {fileID: 1040791999}
@@ -11492,7 +11511,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabToSpawn: {fileID: 3718935458964753842, guid: d7d58f7f10cf0234091b46cf7e52d6ab, type: 3}
-  spawnPoint: {fileID: 638382321}
   spawnInterval: 60
 --- !u!1 &638513497
 GameObject:
@@ -12255,7 +12273,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabToSpawn: {fileID: 3718935458964753842, guid: d7d58f7f10cf0234091b46cf7e52d6ab, type: 3}
-  spawnPoint: {fileID: 0}
   spawnInterval: 60
 --- !u!1 &681519314
 GameObject:
@@ -12617,7 +12634,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabToSpawn: {fileID: 3718935458964753842, guid: d7d58f7f10cf0234091b46cf7e52d6ab, type: 3}
-  spawnPoint: {fileID: 690061540}
   spawnInterval: 60
 --- !u!1 &694138708
 GameObject:
@@ -14269,7 +14285,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabToSpawn: {fileID: 3718935458964753842, guid: d7d58f7f10cf0234091b46cf7e52d6ab, type: 3}
-  spawnPoint: {fileID: 758883655}
   spawnInterval: 60
 --- !u!1 &760693329
 GameObject:
@@ -23607,6 +23622,7 @@ MonoBehaviour:
   sfx: {fileID: 1907797046}
   playerCamera: {fileID: 963194227}
   canvasManager: {fileID: 806778617}
+  wiz: {fileID: 558733406}
 --- !u!4 &1247630306
 Transform:
   m_ObjectHideFlags: 0
@@ -29907,7 +29923,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabToSpawn: {fileID: 3718935458964753842, guid: d7d58f7f10cf0234091b46cf7e52d6ab, type: 3}
-  spawnPoint: {fileID: 0}
   spawnInterval: 60
 --- !u!1001 &1579445022
 PrefabInstance:
@@ -30250,7 +30265,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabToSpawn: {fileID: 3718935458964753842, guid: d7d58f7f10cf0234091b46cf7e52d6ab, type: 3}
-  spawnPoint: {fileID: 0}
   spawnInterval: 60
 --- !u!1 &1593036226
 GameObject:
@@ -31031,6 +31045,7 @@ MonoBehaviour:
   smallDamage: 1
   wand: {fileID: 1741112827}
   sfx: {fileID: 1087520513}
+  wiz: {fileID: 558733406}
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -31526,7 +31541,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabToSpawn: {fileID: 3718935458964753842, guid: d7d58f7f10cf0234091b46cf7e52d6ab, type: 3}
-  spawnPoint: {fileID: 0}
   spawnInterval: 60
 --- !u!1 &1652378832
 GameObject:
@@ -34530,7 +34544,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabToSpawn: {fileID: 3718935458964753842, guid: d7d58f7f10cf0234091b46cf7e52d6ab, type: 3}
-  spawnPoint: {fileID: 1784546176}
   spawnInterval: 60
 --- !u!1 &1795079964
 GameObject:
@@ -36033,7 +36046,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabToSpawn: {fileID: 3718935458964753842, guid: d7d58f7f10cf0234091b46cf7e52d6ab, type: 3}
-  spawnPoint: {fileID: 0}
   spawnInterval: 60
 --- !u!1 &1901224657
 GameObject:
@@ -38540,8 +38552,8 @@ Transform:
   m_GameObject: {fileID: 2029586341}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -10, y: 2.5, z: -198.99}
-  m_LocalScale: {x: 1, y: 0.5, z: 1}
+  m_LocalPosition: {x: -10, y: 5, z: -198.99}
+  m_LocalScale: {x: 2, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 85284235}
@@ -40129,6 +40141,7 @@ MonoBehaviour:
   sfx: {fileID: 938334475}
   maxHealth: 3
   health: 1
+  wiz: {fileID: 558733406}
   vignette: {fileID: 881702807}
   camAnim: {fileID: 963194229}
   isWalking: 0

@@ -13,6 +13,7 @@ public class PlayerMove : MonoBehaviour
     public int maxHealth = 3;
     public int health;
 
+    public Animator wiz;
     public Animator vignette;
     public Animator camAnim;
     public bool isWalking;
@@ -128,6 +129,7 @@ public class PlayerMove : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        wiz.SetTrigger("damaged");
         camAnim.SetTrigger("Hit");
         sfx.PlayOneShot("PlayerDamage");
         health -= damage;

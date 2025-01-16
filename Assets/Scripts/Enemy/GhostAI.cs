@@ -18,6 +18,7 @@ public class GhostAI : MonoBehaviour
     public Camera playerCamera;
     public CanvasManager canvasManager;
 
+    public Animator wiz;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private bool hasBeenSeen = false;
@@ -43,6 +44,11 @@ public class GhostAI : MonoBehaviour
         if (player.GetComponent<PlayerMove>().isDead)
         {
             return;
+        }
+
+        if (wiz != null)
+        {
+            wiz.SetBool("isSpawned", isSpawned);
         }
 
         if (!isSpawned || isDisabled) return;

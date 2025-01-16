@@ -113,7 +113,7 @@ public class Orb : MonoBehaviour
         {
             canvasManager.OpenCanvas("BlueInfo", true);
             playerMove.maxJumps = 2;
-            playerMove.momentumDamping = 0.3f;
+            playerMove.momentumDamping = 0.01f;
         }
         if (isViolet)
         {
