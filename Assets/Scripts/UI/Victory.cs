@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class VictoryScreen : MonoBehaviour
 {
@@ -16,8 +17,12 @@ public class VictoryScreen : MonoBehaviour
     [TextArea(3, 10)]  // Multi-line text area for longer body texts
     public string[] bodies;   // Array of body texts corresponding to different endings
 
+    public float timeStarted;
+    public float timeUntilClick = 5f;
+
     void Start()
     {
+        timeStarted = Time.time;
         // Access the player stats from the GameManager
         int orbs = GameManager.Instance.orbsCollected;
         int money = GameManager.Instance.money;
@@ -29,6 +34,16 @@ public class VictoryScreen : MonoBehaviour
         DisplayEnding(endingIndex);
     }
 
+    private void Update()
+    {
+        if (timeStarted + timeUntilClick >= Time.time)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                SceneManager.LoadScene("MainMenu");
+            }
+        }
+    }
     /// <summary>
     /// Determines the ending index based on player stats.
     /// </summary>

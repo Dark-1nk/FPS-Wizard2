@@ -10,6 +10,7 @@ public class CutsceneManager : MonoBehaviour
     public Image cutsceneImage;  // Reference to the UI Image component that will display the images
     public TMP_Text cutsceneText;    // Reference to the UI Text component to display text
     public Sprite[] cutsceneImages; // List of images to display during the cutscene
+    public AudioClips sfx;
 
     [TextArea(3, 10)]  // This allows for a multi-line text area in the Inspector for longer text entries
     public string[] cutsceneTexts;  // List of texts to display during the cutscene
@@ -35,6 +36,7 @@ public class CutsceneManager : MonoBehaviour
         // Check for player input to advance the cutscene (key or mouse button)
         if (isCutscenePlaying && (Input.anyKeyDown || Input.GetMouseButtonDown(0)))
         {
+            sfx.PlayOneShot("Click");
             if (isTyping)
             {
                 // If typing, skip the typing effect and show the full text immediately
@@ -49,6 +51,7 @@ public class CutsceneManager : MonoBehaviour
                 }
                 else
                 {
+                    sfx.PlayOneShot("Click");
                     StartCoroutine(DelayBetweenClicks());
                 }
             }
