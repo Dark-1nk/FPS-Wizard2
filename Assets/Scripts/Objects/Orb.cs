@@ -12,6 +12,7 @@ public class Orb : MonoBehaviour
     public bool isViolet;
     public bool isPink;
 
+    public AudioClips sfx;
     DoorManager doorManager;
 
     // UI Canvas to track items
@@ -37,6 +38,7 @@ public class Orb : MonoBehaviour
         if (playerInRange && Input.GetKeyDown(KeyCode.E))
         {
             playerMove.orbsCollected++;
+            sfx.PlayOneShot("Orb");
             GetItemColor();
             OnPickUp();
             PickUpItem();

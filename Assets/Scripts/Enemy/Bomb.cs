@@ -5,9 +5,15 @@ public class Bomb : MonoBehaviour
     private float explosionRadius;
     private int damage;
     private Vector3 targetPosition;
+    public AudioClips sfx;
+    private Animator animator;
 
     public float speed = 10f; // Speed of the bomb
 
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
     public void Initialize(float radius, int damageAmount, Vector3 target)
     {
         explosionRadius = radius;
@@ -27,9 +33,12 @@ public class Bomb : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        Explode();
+        if (other.gameObject.GetComponent<Collider>())
+        {
+            Explode();
+        }
     }
 
     private void Explode()
@@ -46,6 +55,8 @@ public class Bomb : MonoBehaviour
             }
         }
 
+        animator.SetTrigger("Explode");
+        sfx.PlayOneShot("Bomb");
         // Destroy the bomb
         Destroy(gameObject);
     }

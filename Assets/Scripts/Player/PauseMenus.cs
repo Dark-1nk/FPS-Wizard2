@@ -22,10 +22,12 @@ public class PauseMenus : MonoBehaviour
             {
                 if (!map.gameObject.activeSelf)
                 {
+                    sfx.PlayOneShot("Map");
                     map.gameObject.SetActive(true);
                 }
                 else
                 {
+                    sfx.PlayOneShot("Map");
                     map.gameObject.SetActive(false);
                 }
             }

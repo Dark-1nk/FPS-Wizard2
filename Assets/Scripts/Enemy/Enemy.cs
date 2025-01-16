@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public EnemyManager enemyManager;
+    private EnemyManager enemyManager;
     public float enemyHealth = 2f;
     public GameObject gunHitEffect;
     public AudioClips sfx;
 
+    private void Start()
+    {
+        enemyManager = FindObjectOfType<EnemyManager>();
+    }
 
     // Update is called once per frame
     void Update()

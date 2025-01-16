@@ -22,8 +22,9 @@ public class GoblinAI : MonoBehaviour
     private enum State { Patrolling, Chasing, Searching, ThrowingBomb };
     private State currentState = State.Patrolling;
 
-    public Transform[] patrolPoints;
+    private Vector3[] patrolPoints;
     private int currentPatrolIndex;
+    private Vector3 currentTarget; // To track the last destination
 
     private Animator animator;
     public AudioClips sfx;
@@ -35,6 +36,8 @@ public class GoblinAI : MonoBehaviour
         player = FindObjectOfType<PlayerMove>().transform;
         agent = GetComponent<NavMeshAgent>();
         spawnPoint = transform.position;
+
+        GeneratePatrolPoints();
         currentPatrolIndex = 0;
         GoToNextPatrolPoint();
     }
@@ -44,76 +47,135 @@ public class GoblinAI : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         bool playerInSight = IsPlayerInSight();
 
+        if (currentState != State.ThrowingBomb) // Skip checks during bomb throwing
+        {
+            lastSeenTime = playerInSight ? Time.time : lastSeenTime;
+        }
+
         switch (currentState)
         {
             case State.Patrolling:
-                if (playerInSight && distanceToPlayer <= detectionRange)
-                {
-                    animator.SetBool("isChasing", true);
-                    currentState = State.Chasing;
-                }
-                else if (!agent.pathPending && agent.remainingDistance < 0.5f)
-                {
-                    GoToNextPatrolPoint();
-                }
+                HandlePatrolling(playerInSight, distanceToPlayer);
                 break;
 
             case State.Chasing:
-                if (playerInSight || distanceToPlayer < chaseRange)
-                {
-                    if (!soundPlayed)
-                    {
-                        sfx.PlayOneShot("GoblinChase");
-                        soundPlayed = true;
-                    }
-
-
-                    agent.SetDestination(player.position);
-
-                    if (distanceToPlayer <= bombThrowRange)
-                    {
-                        currentState = State.ThrowingBomb;
-                    }
-                }
-
-                if (Time.time - lastSeenTime > searchDuration)
-                {
-                    animator.SetBool("isChasing", false);
-                    soundPlayed = false;
-                    currentState = State.Searching;
-                }
+                HandleChasing(playerInSight, distanceToPlayer);
                 break;
 
             case State.Searching:
-                agent.SetDestination(spawnPoint);
-                if (Vector3.Distance(transform.position, spawnPoint) < 1f)
-                {
-                    currentState = State.Patrolling;
-                    GoToNextPatrolPoint();
-                }
+                HandleSearching();
                 break;
 
             case State.ThrowingBomb:
-                agent.isStopped = true;
-                if (Time.time >= lastThrowTime + throwCooldown)
-                {
-                    ThrowBomb();
-                }
-                if (distanceToPlayer > bombThrowRange)
-                {
-                    agent.isStopped = false;
-                    currentState = State.Chasing;
-                }
+                HandleThrowingBomb(distanceToPlayer);
                 break;
+        }
+    }
+
+    private void GeneratePatrolPoints()
+    {
+        patrolPoints = new Vector3[4];
+        float patrolDistance = 20f; // Distance from the spawn point to each patrol point
+        float sampleDistance = 2.0f; // NavMesh sample radius
+
+        Vector3[] offsets = new Vector3[]
+        {
+        new Vector3(patrolDistance, 0, 0),  // Right
+        new Vector3(-patrolDistance, 0, 0), // Left
+        new Vector3(0, 0, patrolDistance),  // Forward
+        new Vector3(0, 0, -patrolDistance)  // Backward
+        };
+
+        for (int i = 0; i < offsets.Length; i++)
+        {
+            Vector3 targetPosition = spawnPoint + offsets[i];
+            NavMeshHit hit;
+
+            if (NavMesh.SamplePosition(targetPosition, out hit, sampleDistance, NavMesh.AllAreas))
+            {
+                patrolPoints[i] = hit.position;
+            }
+            else
+            {
+                Debug.LogWarning($"Failed to find a valid patrol point near {targetPosition}. Defaulting to spawn point.");
+                patrolPoints[i] = spawnPoint; // Fallback to spawn point
+            }
+        }
+    }
+
+
+    private void HandlePatrolling(bool playerInSight, float distanceToPlayer)
+    {
+        if (playerInSight || distanceToPlayer <= detectionRange)
+        {
+            ChangeState(State.Chasing);
+            animator.SetBool("isChasing", true);
+        }
+        else if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        {
+            GoToNextPatrolPoint();
+        }
+    }
+
+    private void HandleChasing(bool playerInSight, float distanceToPlayer)
+    {
+        if (playerInSight && distanceToPlayer <= chaseRange)
+        {
+            if (!soundPlayed)
+            {
+                sfx.PlayOneShot("GoblinChase");
+                soundPlayed = true;
+            }
+
+            SetAgentDestination(player.position);
+
+            if (distanceToPlayer <= bombThrowRange && Time.time >= lastThrowTime + throwCooldown)
+            {
+                ChangeState(State.ThrowingBomb);
+            }
+        }
+        else
+        {
+            soundPlayed = false;
+
+            if (!playerInSight || distanceToPlayer > chaseRange)
+            {
+                lastSeenTime = Time.time;
+                ChangeState(State.Searching);
+            }
+        }
+    }
+
+    private void HandleSearching()
+    {
+        SetAgentDestination(spawnPoint);
+
+        if (Vector3.Distance(transform.position, spawnPoint) < 1f)
+        {
+            ChangeState(State.Patrolling);
+            GoToNextPatrolPoint();
+        }
+    }
+
+    private void HandleThrowingBomb(float distanceToPlayer)
+    {
+        if (distanceToPlayer <= bombThrowRange && Time.time >= lastThrowTime + throwCooldown)
+        {
+            agent.isStopped = true;
+            ThrowBomb();
+        }
+        else if (distanceToPlayer > bombThrowRange)
+        {
+            agent.isStopped = false;
+            ChangeState(State.Chasing);
         }
     }
 
     private void GoToNextPatrolPoint()
     {
-        if (patrolPoints.Length == 0)
-            return;
+        if (patrolPoints.Length == 0) return;
 
-        agent.destination = patrolPoints[currentPatrolIndex].position;
+        SetAgentDestination(patrolPoints[currentPatrolIndex]);
         currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
     }
 
@@ -128,6 +190,7 @@ public class GoblinAI : MonoBehaviour
 
     private void ThrowBomb()
     {
+        Debug.Log("ThrowBomb method called.");
         animator.SetTrigger("Throw");
         sfx.PlayOneShot("GoblinThrow");
         lastThrowTime = Time.time;
@@ -135,12 +198,40 @@ public class GoblinAI : MonoBehaviour
         if (bombPrefab != null && bombSpawnPoint != null)
         {
             GameObject bomb = Instantiate(bombPrefab, bombSpawnPoint.position, Quaternion.identity);
+            Debug.Log($"Bomb instantiated at {bombSpawnPoint.position}");
+
             Bomb bombScript = bomb.GetComponent<Bomb>();
             if (bombScript != null)
             {
                 bombScript.Initialize(bombExplosionRadius, bombDamage, player.position);
+                Debug.Log("Bomb script initialized.");
+            }
+            else
+            {
+                Debug.LogWarning("Bomb script missing on prefab.");
             }
         }
+        else
+        {
+            Debug.LogWarning("Bomb prefab or spawn point not assigned.");
+        }
+
+        ChangeState(State.Chasing);
+    }
+
+    private void SetAgentDestination(Vector3 target)
+    {
+        if (currentTarget != target)
+        {
+            agent.SetDestination(target);
+            currentTarget = target;
+        }
+    }
+
+    private void ChangeState(State newState)
+    {
+        Debug.Log($"Transitioning from {currentState} to {newState}");
+        currentState = newState;
     }
 
     private void OnDrawGizmosSelected()
@@ -151,5 +242,15 @@ public class GoblinAI : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, detectionRange);
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, chaseRange);
+
+        if (patrolPoints != null)
+        {
+            Gizmos.color = Color.yellow;
+            foreach (var point in patrolPoints)
+            {
+                Gizmos.DrawSphere(point, 0.5f);
+            }
+        }
     }
 }
+

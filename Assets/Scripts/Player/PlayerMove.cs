@@ -55,11 +55,14 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
+
         GetInput();
         MovePlayer();
         Die();
         heartsAnim.SetInteger("Health", health);
         vignette.SetInteger("Health", health);
+        GameManager.Instance.orbsCollected = orbsCollected;
+        GameManager.Instance.money = money;
 
         camAnim.SetBool("isWalking", isWalking);
     }
@@ -132,6 +135,8 @@ public class PlayerMove : MonoBehaviour
         if (health <= 0)
         {
             isDead = true;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
             SceneManager.LoadScene("Game Over");
         }
     }

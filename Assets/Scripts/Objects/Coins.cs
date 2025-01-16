@@ -7,6 +7,7 @@ public class Coins : MonoBehaviour
 {
     // UI Canvas to track items
     public TMP_Text money; // Assign the canvas in the inspector
+    public AudioClips sfx;
 
     private bool playerInRange = false; // Tracks if the player is in range
     private PlayerMove playerMove; // Reference to PlayerMove component
@@ -47,6 +48,7 @@ public class Coins : MonoBehaviour
 
     private void PickUpItem()
     {
+        sfx.PlayOneShot("Coin");
         money.text = ("$" + playerMove.money + "B");
         Destroy(gameObject);
     }

@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5263810482885426241
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4314886855236175169}
+  m_Layer: 0
+  m_Name: Hand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4314886855236175169
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5263810482885426241}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3732585308404202780}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6803339879170582633
 GameObject:
   m_ObjectHideFlags: 0
@@ -156,6 +187,7 @@ Transform:
   m_Children:
   - {fileID: 6408203216914154518}
   - {fileID: 2593448241094137961}
+  - {fileID: 4314886855236175169}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!195 &5608541650496909344
@@ -216,7 +248,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyManager: {fileID: 0}
-  enemyHealth: 3
+  enemyHealth: 10
   gunHitEffect: {fileID: 3841735356482455358, guid: f295d835408df0045b5b5212e63b3bf1, type: 3}
   sfx: {fileID: 0}
 --- !u!54 &1171406587656460375
@@ -258,17 +290,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fadead134cfaea04bb9bbc9b096ff1ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRange: 10
-  chaseRange: 20
-  bombThrowRange: 18
+  detectionRange: 30
+  chaseRange: 30
+  bombThrowRange: 20
   searchDuration: 5
   throwCooldown: 5
-  bombPrefab: {fileID: 0}
+  bombPrefab: {fileID: 8534544774055654351, guid: 8641fd644699b5442bd8fc3b8c1c3d42, type: 3}
   bombSpawnPoint: {fileID: 3732585308404202780}
   bombExplosionRadius: 5
   bombDamage: 2
-  patrolPoints: []
-  sfx: {fileID: 0}
+  sfx: {fileID: 5513057933727829330}
 --- !u!1 &8965596452676011547
 GameObject:
   m_ObjectHideFlags: 0

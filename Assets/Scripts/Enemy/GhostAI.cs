@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class GhostAI : MonoBehaviour
 {
@@ -19,7 +19,6 @@ public class GhostAI : MonoBehaviour
     public Camera playerCamera;
     public CanvasManager canvasManager;
 
-    private NavMeshAgent agent;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private bool hasBeenSeen = false;
@@ -34,12 +33,8 @@ public class GhostAI : MonoBehaviour
 
     void Start()
     {
-        //may need to initialize hasPlayed here
-
-
         player = FindObjectOfType<PlayerMove>().transform;
         animator = GetComponentInChildren<Animator>();
-        agent = GetComponent<NavMeshAgent>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         StartCoroutine(SpawnAtRandomInterval());
     }
@@ -58,8 +53,7 @@ public class GhostAI : MonoBehaviour
         switch (currentState)
         {
             case State.Creeping:
-                agent.speed = creepSpeed;
-                agent.SetDestination(player.position);
+                MoveTowardsPlayer(creepSpeed);
 
                 if (isLookingAtEnemy)
                 {
@@ -69,8 +63,7 @@ public class GhostAI : MonoBehaviour
                 break;
 
             case State.Seen:
-                agent.speed = fastSpeed;
-                agent.SetDestination(player.position);
+                MoveTowardsPlayer(fastSpeed);
 
                 if (!isLookingAtEnemy && hasBeenSeen)
                 {
@@ -98,6 +91,12 @@ public class GhostAI : MonoBehaviour
         CheckForKill();
     }
 
+    private void MoveTowardsPlayer(float speed)
+    {
+        Vector3 direction = (player.position - transform.position).normalized;
+        transform.position = Vector3.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
+    }
+
     private IEnumerator SpawnAtRandomInterval()
     {
         while (true)
@@ -111,13 +110,8 @@ public class GhostAI : MonoBehaviour
     {
         Vector3 spawnPosition = player.position - player.forward * spawnDistanceBehindPlayer;
 
-        NavMeshHit navHit;
-        if (NavMesh.SamplePosition(spawnPosition, out navHit, 5f, NavMesh.AllAreas))
-        {
-            spawnPosition = navHit.position; // Adjust to the nearest valid NavMesh point
-        }
-
         transform.position = spawnPosition;
+        spawnPosition.y = 3;
         isSpawned = true;
         currentState = State.Creeping;
 
@@ -127,14 +121,13 @@ public class GhostAI : MonoBehaviour
 
     private void DisableGhost()
     {
+        sfx.StopClip();
         isDisabled = true;
         isSpawned = false;
 
-        // Disable visuals and physics
+        // Disable visuals
         if (animator != null)
             animator.enabled = false;
-        if (agent != null)
-            agent.isStopped = true;
         if (spriteRenderer != null)
             spriteRenderer.enabled = false;
     }
@@ -144,11 +137,9 @@ public class GhostAI : MonoBehaviour
         isDisabled = false;
         isSpawned = true;
 
-        // Enable visuals and physics
+        // Enable visuals
         if (animator != null)
             animator.enabled = true;
-        if (agent != null)
-            agent.isStopped = false;
         if (spriteRenderer != null)
             spriteRenderer.enabled = true;
         sfx.PlayOneShot("Ghost");
@@ -176,7 +167,6 @@ public class GhostAI : MonoBehaviour
         // Kill logic
         if (!player.GetComponent<PlayerMove>().isDead && distanceToPlayer <= killRange)
         {
-            agent.isStopped = true;
             KillPlayer();
             player.GetComponent<PlayerMove>().isDead = true;
             return;
@@ -199,12 +189,12 @@ public class GhostAI : MonoBehaviour
         }
     }
 
-
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, killRange);
     }
+
     private IEnumerator DeathSequence()
     {
         Debug.Log("Player has died. Changing scene in 2 seconds...");
@@ -217,8 +207,10 @@ public class GhostAI : MonoBehaviour
             yield return null;
         }
 
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+        UnityEngine.Cursor.visible = true;
+
         // Load the game over scene
         SceneManager.LoadScene("Game Over");
     }
 }
-
