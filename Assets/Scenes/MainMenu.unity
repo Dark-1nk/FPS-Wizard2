@@ -896,7 +896,7 @@ MonoBehaviour:
     audioClipName: Cutscene
   - sceneName: Ending
     audioClipName: Ending
-  - sceneName: GameOver
+  - sceneName: Game Over
     audioClipName: GameOver
 --- !u!114 &1239838862
 MonoBehaviour:
@@ -1087,6 +1087,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: e2234e7c0d5970e4c84de5022e1c4f00, type: 3}
   - name: Spark
     clip: {fileID: 8300000, guid: c71ade322171be94bb31fac06c7bab2d, type: 3}
+  - name: Click
+    clip: {fileID: 8300000, guid: e0924a85339d85d458b8fe6e5944109d, type: 3}
 --- !u!4 &1259904421
 Transform:
   m_ObjectHideFlags: 0

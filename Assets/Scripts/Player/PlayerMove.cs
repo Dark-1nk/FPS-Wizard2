@@ -125,6 +125,7 @@ public class PlayerMove : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        camAnim.SetTrigger("Hit");
         sfx.PlayOneShot("PlayerDamage");
         health -= damage;
         wand.Hurt();
