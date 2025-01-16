@@ -4,16 +4,25 @@ using UnityEngine.SceneManagement;
 
 public class MusicManager : MonoBehaviour
 {
+    public static MusicManager Instance; 
+
     [Header("Scene and Audio Clip Mapping")]
     public List<SceneMusic> sceneMusicList; // List of scenes and their corresponding audio clips
-    private AudioClips audioClips; // Reference to your AudioClips script
+    public AudioClips audioClips; // Reference to your AudioClips script
 
     private string currentSceneName = ""; // Keeps track of the current scene to prevent redundant music changes
 
     void Awake()
     {
-        // Ensure this object persists across scenes
-        DontDestroyOnLoad(gameObject);
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
         // Get the reference to the AudioClips script
         audioClips = GetComponent<AudioClips>();

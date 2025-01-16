@@ -14,7 +14,6 @@ public class GhostAI : MonoBehaviour
     public float disappearanceDelay = 1f;
     public float killRange = 1f;
     public AudioClips sfx;
-    public AudioClips music;
 
     public Camera playerCamera;
     public CanvasManager canvasManager;
@@ -180,7 +179,7 @@ public class GhostAI : MonoBehaviour
         {
             Debug.Log("Ghost has killed player");
 
-            music.StopClip(0);
+            MusicManager.Instance.audioClips.StopClip(0);
             sfx.StopClip(0);
             canvasManager.OpenCanvas("GhostDeath", false);
             sfx.PlayOneShot("GhostDeath");

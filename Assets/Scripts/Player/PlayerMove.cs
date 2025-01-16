@@ -55,10 +55,13 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
+        if (health <= 0)
+        {
+            StartCoroutine("DeathSequence");
+        }
 
         GetInput();
         MovePlayer();
-        Die();
         heartsAnim.SetInteger("Health", health);
         vignette.SetInteger("Health", health);
         GameManager.Instance.orbsCollected = orbsCollected;
@@ -133,13 +136,27 @@ public class PlayerMove : MonoBehaviour
 
     public void Die()
     {
-        if (health <= 0)
         {
             isDead = true;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             SceneManager.LoadScene("Game Over");
         }
+    }
+    private IEnumerator DeathSequence()
+    {
+        Debug.Log("Player has died. Changing scene in 2 seconds...");
+
+        // Wait for 2 seconds
+        float elapsedTime = 0f;
+        while (elapsedTime < 0.3f)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Load the game over scene
+        Die();
     }
 
     void MovePlayer()

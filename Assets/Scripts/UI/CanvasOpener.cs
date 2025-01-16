@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CanvasOpener : MonoBehaviour
+public class CanvasOpener: MonoBehaviour
 {
     [System.Serializable]
     public class CanvasEntry
@@ -10,23 +10,31 @@ public class CanvasOpener : MonoBehaviour
         public GameObject canvasObject; // Reference to the canvas GameObject
     }
 
-    public List<CanvasEntry> canvases; // List of canvases
-    private int currentIndex = 0; // Current canvas index
-    public int nextCanvasIndex = 0; // Index of the next canvas to open
+    public AudioClips sfx;
 
-    private void Start()
+    public List<CanvasEntry> canvases; // List of canvases
+    private int currentIndex = -1; // Tracks the currently active canvas index
+
+    /// <summary>
+    /// Initializes and opens the first canvas in the list.
+    /// </summary>
+    public void OpenCanvas()
     {
-        // Initialize all canvases to inactive except the first
-        for (int i = 0; i < canvases.Count; i++)
+        
+        if (canvases.Count == 0)
         {
-            if (canvases[i].canvasObject != null)
-            {
-                canvases[i].canvasObject.SetActive(i == currentIndex);
-            }
+            Debug.LogWarning("No canvases available to manage.");
+            return;
         }
+
+        currentIndex = 0;
+        ActivateCanvas(currentIndex);
     }
 
-    public void OpenNextCanvas()
+    /// <summary>
+    /// Cycles to the next canvas in the list.
+    /// </summary>
+    public void NextCanvas()
     {
         if (canvases.Count == 0)
         {
@@ -35,50 +43,53 @@ public class CanvasOpener : MonoBehaviour
         }
 
         // Deactivate the current canvas
-        if (canvases[currentIndex].canvasObject != null)
+        if (currentIndex != -1)
         {
-            canvases[currentIndex].canvasObject.SetActive(false);
+            DeactivateCanvas(currentIndex);
         }
 
-        // Activate the next canvas
-        currentIndex = nextCanvasIndex % canvases.Count;
-        if (canvases[currentIndex].canvasObject != null)
-        {
-            canvases[currentIndex].canvasObject.SetActive(true);
-        }
-
-        // Update the next canvas index
-        nextCanvasIndex = (currentIndex + 1) % canvases.Count;
+        // Cycle to the next canvas
+        currentIndex = (currentIndex + 1) % canvases.Count;
+        ActivateCanvas(currentIndex);
     }
 
-    public void OpenCanvasByName(string canvasName)
+    /// <summary>
+    /// Activates the canvas at the specified index.
+    /// </summary>
+    /// <param name="index">Index of the canvas to activate.</param>
+    private void ActivateCanvas(int index)
     {
-        int index = canvases.FindIndex(c => c.canvasName == canvasName);
-        if (index == -1)
+        sfx.PlayOneShot("Click");
+        if (index >= 0 && index < canvases.Count && canvases[index].canvasObject != null)
         {
-            Debug.LogWarning($"Canvas with name '{canvasName}' not found.");
-            return;
+            canvases[index].canvasObject.SetActive(true);
         }
-
-        // Deactivate the current canvas
-        if (canvases[currentIndex].canvasObject != null)
-        {
-            canvases[currentIndex].canvasObject.SetActive(false);
-        }
-
-        // Activate the specified canvas
-        currentIndex = index;
-        if (canvases[currentIndex].canvasObject != null)
-        {
-            canvases[currentIndex].canvasObject.SetActive(true);
-        }
-
-        // Update the next canvas index
-        nextCanvasIndex = (currentIndex + 1) % canvases.Count;
     }
 
-    public void ResetToFirstCanvas()
+    /// <summary>
+    /// Deactivates the canvas at the specified index.
+    /// </summary>
+    /// <param name="index">Index of the canvas to deactivate.</param>
+    private void DeactivateCanvas(int index)
     {
-        OpenCanvasByName(canvases[0].canvasName);
+        if (index >= 0 && index < canvases.Count && canvases[index].canvasObject != null)
+        {
+            canvases[index].canvasObject.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// Deactivates all canvases.
+    /// </summary>
+    public void CloseAllCanvases()
+    {
+        sfx.PlayOneShot("EnemyDamage");
+        foreach (var canvas in canvases)
+        {
+            if (canvas.canvasObject != null)
+            {
+                canvas.canvasObject.SetActive(false);
+            }
+        }
     }
 }
